@@ -615,6 +615,34 @@ func (a *Client) ListDistroXV1(params *ListDistroXV1Params) (*ListDistroXV1OK, e
 }
 
 /*
+ListDistroxDiagnosticsCollectionsV1 returns a list of the recent diagnostics collections
+*/
+func (a *Client) ListDistroxDiagnosticsCollectionsV1(params *ListDistroxDiagnosticsCollectionsV1Params) (*ListDistroxDiagnosticsCollectionsV1OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListDistroxDiagnosticsCollectionsV1Params()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listDistroxDiagnosticsCollectionsV1",
+		Method:             "GET",
+		PathPattern:        "/v1/distrox/diagnostics/{crn}/collections",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &ListDistroxDiagnosticsCollectionsV1Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListDistroxDiagnosticsCollectionsV1OK), nil
+
+}
+
+/*
 ListRetryableFlowsDistroXV1 lists retryable failed flows
 
 List all, currently retryable operations for the stack

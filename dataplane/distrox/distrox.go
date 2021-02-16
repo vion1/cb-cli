@@ -445,6 +445,24 @@ func CollectCmDiagnostics(c *cli.Context) {
 	fmt.Println("CM based collection started")
 }
 
+func ListDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "get latest DistroX diagnostics collection flows for freeipa")
+	dxClient := oauth.NewCloudbreakHTTPClientFromContext(c)
+	resp, err := dxClient.Cloudbreak.V1distrox.ListDistroxDiagnosticsCollectionsV1(v1distrox.NewListDistroxDiagnosticsCollectionsV1Params().WithCrn(c.String(fl.FlCrn.Name)))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	collections := resp.Payload.Collections
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(collections); err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	fmt.Println(buf.String())
+}
+
 func CollectDiagnostics(c *cli.Context) {
 	defer commonutils.TimeTrack(time.Now(), "collect distrox diagnostics")
 	dxClient := oauth.NewCloudbreakHTTPClientFromContext(c)

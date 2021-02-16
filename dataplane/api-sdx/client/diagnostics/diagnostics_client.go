@@ -136,6 +136,34 @@ func (a *Client) GetSdxCmVMLogs(params *GetSdxCmVMLogsParams) (*GetSdxCmVMLogsOK
 
 }
 
+/*
+ListSdxDiagnosticsCollections returns a list of the recent diagnostics collections
+*/
+func (a *Client) ListSdxDiagnosticsCollections(params *ListSdxDiagnosticsCollectionsParams) (*ListSdxDiagnosticsCollectionsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListSdxDiagnosticsCollectionsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listSdxDiagnosticsCollections",
+		Method:             "GET",
+		PathPattern:        "/diagnostics/{crn}/collections",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &ListSdxDiagnosticsCollectionsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListSdxDiagnosticsCollectionsOK), nil
+
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport

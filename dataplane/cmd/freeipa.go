@@ -86,6 +86,19 @@ func init() {
 							}
 						},
 					},
+					{
+						Name:        "list-collections",
+						Usage:       "list latest diagnostics collection flows",
+						Description: `list latest diagnostics collection flows`,
+						Before:      cf.CheckConfigAndCommandFlagsWithoutWorkspace,
+						Flags:       fl.NewFlagBuilder().AddFlags(fl.FlEnvironmentName).AddAGlobalFlags().Build(),
+						Action:      freeipa.ListDiagnosticsCollections,
+						BashComplete: func(c *cli.Context) {
+							for _, f := range fl.NewFlagBuilder().AddFlags(fl.FlEnvironmentName).AddAGlobalFlags().Build() {
+								fl.PrintFlagCompletion(f)
+							}
+						},
+					},
 				},
 			},
 			{

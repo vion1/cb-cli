@@ -65,6 +65,9 @@ type DiagnosticsCollectionRequest struct {
 
 	// Upgrade or install required telemetry cli tool on the nodes (works only with network)
 	UpdatePackage bool `json:"updatePackage,omitempty"`
+
+	// Unique identifier for the diagnostics flow. If it's empty, flow ID will be used.
+	UUID string `json:"uuid,omitempty"`
 }
 
 // Validate validates this diagnostics collection request

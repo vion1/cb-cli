@@ -385,6 +385,26 @@ func GetVmLogs(c *cli.Context) {
 	fmt.Println(buf.String())
 }
 
+func ListDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "get latest freeipa diagnostics collection flows for freeipa")
+	freeIpaClient := ClientFreeIpa(*oauth.NewFreeIpaClientFromContext(c)).FreeIpa
+	envName := c.String(fl.FlEnvironmentName.Name)
+	envCrn := env.GetEnvirontmentCrnByName(c, envName)
+	resp, err := freeIpaClient.V1diagnostics.ListDiagnosticsCollectionsV1(v1diagnostics.NewListDiagnosticsCollectionsV1Params().WithEnvironmentCrn(envCrn))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	collections := resp.Payload.Collections
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(collections); err != nil {
+		utils.LogErrorAndExit(err)
+	}
+	fmt.Println(buf.String())
+}
+
 func CollectDiagnostics(c *cli.Context) {
 	defer commonutils.TimeTrack(time.Now(), "get user synchronization state for an environment")
 	freeIpaClient := ClientFreeIpa(*oauth.NewFreeIpaClientFromContext(c)).FreeIpa

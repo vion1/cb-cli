@@ -84,6 +84,36 @@ func (a *Client) GetFreeIpaVMLogsV1(params *GetFreeIpaVMLogsV1Params) (*GetFreeI
 
 }
 
+/*
+ListDiagnosticsCollectionsV1 returns a list of diagnostics collections for the specified free ipa cluster
+
+FreeIPA is an integrated Identity and Authentication solution that can be used for any of CM, CDP services.
+*/
+func (a *Client) ListDiagnosticsCollectionsV1(params *ListDiagnosticsCollectionsV1Params) (*ListDiagnosticsCollectionsV1OK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListDiagnosticsCollectionsV1Params()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listDiagnosticsCollectionsV1",
+		Method:             "GET",
+		PathPattern:        "/v1/diagnostics/{environmentCrn}/collections",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &ListDiagnosticsCollectionsV1Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListDiagnosticsCollectionsV1OK), nil
+
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport

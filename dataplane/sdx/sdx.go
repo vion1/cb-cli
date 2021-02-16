@@ -618,6 +618,24 @@ func GetVmLogs(c *cli.Context) {
 	fmt.Println(buf.String())
 }
 
+func ListDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "get latest SDX diagnostics collection flows for freeipa")
+	sdxClient := ClientSdx(*oauth.NewSDXClientFromContext(c)).Sdx
+	resp, err := sdxClient.Diagnostics.ListSdxDiagnosticsCollections(diagnostics.NewListSdxDiagnosticsCollectionsParams().WithCrn(c.String(fl.FlCrn.Name)))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	collections := resp.Payload.Collections
+	buf := new(bytes.Buffer)
+	enc := json.NewEncoder(buf)
+	enc.SetEscapeHTML(false)
+	enc.SetIndent("", "  ")
+	if err := enc.Encode(collections); err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	fmt.Println(buf.String())
+}
+
 func CollectDiagnostics(c *cli.Context) {
 	defer commonutils.TimeTrack(time.Now(), "get user synchronization state for an environment")
 	sdxClient := ClientSdx(*oauth.NewSDXClientFromContext(c)).Sdx

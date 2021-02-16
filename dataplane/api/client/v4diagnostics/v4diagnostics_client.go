@@ -136,6 +136,34 @@ func (a *Client) GetStackCmVMLogs(params *GetStackCmVMLogsParams) (*GetStackCmVM
 
 }
 
+/*
+ListStackDiagnosticsCollections returns a list of the recent diagnostics collections
+*/
+func (a *Client) ListStackDiagnosticsCollections(params *ListStackDiagnosticsCollectionsParams) (*ListStackDiagnosticsCollectionsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewListStackDiagnosticsCollectionsParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "listStackDiagnosticsCollections",
+		Method:             "GET",
+		PathPattern:        "/v4/diagnostics/{crn}/collections",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &ListStackDiagnosticsCollectionsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*ListStackDiagnosticsCollectionsOK), nil
+
+}
+
 // SetTransport changes the transport on the client
 func (a *Client) SetTransport(transport runtime.ClientTransport) {
 	a.transport = transport
