@@ -446,7 +446,7 @@ func CollectCmDiagnostics(c *cli.Context) {
 }
 
 func ListDiagnosticsCollections(c *cli.Context) {
-	defer commonutils.TimeTrack(time.Now(), "get latest DistroX diagnostics collection flows for freeipa")
+	defer commonutils.TimeTrack(time.Now(), "get latest DistroX diagnostics collection flows")
 	dxClient := oauth.NewCloudbreakHTTPClientFromContext(c)
 	resp, err := dxClient.Cloudbreak.V1distrox.ListDistroxDiagnosticsCollectionsV1(v1distrox.NewListDistroxDiagnosticsCollectionsV1Params().WithCrn(c.String(fl.FlCrn.Name)))
 	if err != nil {
@@ -461,6 +461,16 @@ func ListDiagnosticsCollections(c *cli.Context) {
 		commonutils.LogErrorAndExit(err)
 	}
 	fmt.Println(buf.String())
+}
+
+func CancelDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "cancel running DistroX diagnostics collection flows")
+	dxClient := oauth.NewCloudbreakHTTPClientFromContext(c)
+	err := dxClient.Cloudbreak.V1distrox.CancelDistroxDiagnosticsCollectionsV1(v1distrox.NewCancelDistroxDiagnosticsCollectionsV1Params().WithCrn(c.String(fl.FlCrn.Name)))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	fmt.Println("Cancel running DistroX diagnostics collections...")
 }
 
 func CollectDiagnostics(c *cli.Context) {

@@ -99,6 +99,19 @@ func init() {
 							}
 						},
 					},
+					{
+						Name:        "cancel-collections",
+						Usage:       "cancel running diagnostics collection flows",
+						Description: `cancel running diagnostics collection flows`,
+						Before:      cf.CheckConfigAndCommandFlagsWithoutWorkspace,
+						Flags:       fl.NewFlagBuilder().AddFlags(fl.FlEnvironmentName).AddAGlobalFlags().Build(),
+						Action:      freeipa.CancelDiagnosticsCollections,
+						BashComplete: func(c *cli.Context) {
+							for _, f := range fl.NewFlagBuilder().AddFlags(fl.FlEnvironmentName).AddAGlobalFlags().Build() {
+								fl.PrintFlagCompletion(f)
+							}
+						},
+					},
 				},
 			},
 			{

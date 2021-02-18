@@ -25,6 +25,34 @@ type Client struct {
 }
 
 /*
+CancelDistroxDiagnosticsCollectionsV1 cancels the not finished diagnostics collections
+*/
+func (a *Client) CancelDistroxDiagnosticsCollectionsV1(params *CancelDistroxDiagnosticsCollectionsV1Params) error {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCancelDistroxDiagnosticsCollectionsV1Params()
+	}
+
+	_, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "cancelDistroxDiagnosticsCollectionsV1",
+		Method:             "POST",
+		PathPattern:        "/v1/distrox/diagnostics/{crn}/collections/cancel",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &CancelDistroxDiagnosticsCollectionsV1Reader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+/*
 CollectDistroxCmBasedDiagnosticsV1 initiates the collection of diagnostical data on datahub cloudera manager
 */
 func (a *Client) CollectDistroxCmBasedDiagnosticsV1(params *CollectDistroxCmBasedDiagnosticsV1Params) (*CollectDistroxCmBasedDiagnosticsV1OK, error) {

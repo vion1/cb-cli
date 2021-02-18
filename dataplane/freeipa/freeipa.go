@@ -386,7 +386,7 @@ func GetVmLogs(c *cli.Context) {
 }
 
 func ListDiagnosticsCollections(c *cli.Context) {
-	defer commonutils.TimeTrack(time.Now(), "get latest freeipa diagnostics collection flows for freeipa")
+	defer commonutils.TimeTrack(time.Now(), "get latest freeipa diagnostics collection flows")
 	freeIpaClient := ClientFreeIpa(*oauth.NewFreeIpaClientFromContext(c)).FreeIpa
 	envName := c.String(fl.FlEnvironmentName.Name)
 	envCrn := env.GetEnvirontmentCrnByName(c, envName)
@@ -405,8 +405,20 @@ func ListDiagnosticsCollections(c *cli.Context) {
 	fmt.Println(buf.String())
 }
 
+func CancelDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "cancel running freeipa diagnostics collection flows")
+	freeIpaClient := ClientFreeIpa(*oauth.NewFreeIpaClientFromContext(c)).FreeIpa
+	envName := c.String(fl.FlEnvironmentName.Name)
+	envCrn := env.GetEnvirontmentCrnByName(c, envName)
+	err := freeIpaClient.V1diagnostics.CancelDiagnosticsCollectionsV1(v1diagnostics.NewCancelDiagnosticsCollectionsV1Params().WithEnvironmentCrn(envCrn))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	fmt.Println("Cancel running freeipa diagnostics collections...")
+}
+
 func CollectDiagnostics(c *cli.Context) {
-	defer commonutils.TimeTrack(time.Now(), "get user synchronization state for an environment")
+	defer commonutils.TimeTrack(time.Now(), "start collect freeipa diagnostics")
 	freeIpaClient := ClientFreeIpa(*oauth.NewFreeIpaClientFromContext(c)).FreeIpa
 	collectionRequest := assembleCollectionRequest(c)
 	_, err := freeIpaClient.V1diagnostics.CollectFreeIpaDiagnosticsV1(v1diagnostics.NewCollectFreeIpaDiagnosticsV1Params().WithBody(collectionRequest))

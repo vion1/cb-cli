@@ -619,7 +619,7 @@ func GetVmLogs(c *cli.Context) {
 }
 
 func ListDiagnosticsCollections(c *cli.Context) {
-	defer commonutils.TimeTrack(time.Now(), "get latest SDX diagnostics collection flows for freeipa")
+	defer commonutils.TimeTrack(time.Now(), "get latest SDX diagnostics collection flows")
 	sdxClient := ClientSdx(*oauth.NewSDXClientFromContext(c)).Sdx
 	resp, err := sdxClient.Diagnostics.ListSdxDiagnosticsCollections(diagnostics.NewListSdxDiagnosticsCollectionsParams().WithCrn(c.String(fl.FlCrn.Name)))
 	if err != nil {
@@ -634,6 +634,16 @@ func ListDiagnosticsCollections(c *cli.Context) {
 		commonutils.LogErrorAndExit(err)
 	}
 	fmt.Println(buf.String())
+}
+
+func CancelDiagnosticsCollections(c *cli.Context) {
+	defer commonutils.TimeTrack(time.Now(), "cancel running SDX diagnostics collection flows")
+	sdxClient := ClientSdx(*oauth.NewSDXClientFromContext(c)).Sdx
+	err := sdxClient.Diagnostics.CancelSdxDiagnosticsCollections(diagnostics.NewCancelSdxDiagnosticsCollectionsParams().WithCrn(c.String(fl.FlCrn.Name)))
+	if err != nil {
+		commonutils.LogErrorAndExit(err)
+	}
+	fmt.Println("Cancel running SDX diagnostics collections...")
 }
 
 func CollectDiagnostics(c *cli.Context) {

@@ -183,6 +183,19 @@ func init() {
 						},
 					},
 					{
+						Name:        "cancel-collections",
+						Usage:       "cancel running SDX diagnostics collection flows",
+						Description: `cancel running SDX diagnostics collection flows`,
+						Before:      cf.CheckConfigAndCommandFlagsWithoutWorkspace,
+						Flags:       fl.NewFlagBuilder().AddFlags(fl.FlCrn).AddAGlobalFlags().Build(),
+						Action:      sdx.CancelDiagnosticsCollections,
+						BashComplete: func(c *cli.Context) {
+							for _, f := range fl.NewFlagBuilder().AddFlags(fl.FlCrn).AddAGlobalFlags().Build() {
+								fl.PrintFlagCompletion(f)
+							}
+						},
+					},
+					{
 						Name:        "logs",
 						Usage:       "list default monitored vm logs for SDX CM clusters",
 						Description: `list default monitored vm logs for SDX CM clusters`,

@@ -25,6 +25,34 @@ type Client struct {
 }
 
 /*
+CancelSdxDiagnosticsCollections cancels the not finished diagnostics collections
+*/
+func (a *Client) CancelSdxDiagnosticsCollections(params *CancelSdxDiagnosticsCollectionsParams) error {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewCancelSdxDiagnosticsCollectionsParams()
+	}
+
+	_, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "cancelSdxDiagnosticsCollections",
+		Method:             "POST",
+		PathPattern:        "/diagnostics/{crn}/collections/cancel",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &CancelSdxDiagnosticsCollectionsReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return err
+	}
+	return nil
+
+}
+
+/*
 CollectSdxCmBasedDiagnostics initiates the collection of diagnostical data through c m API requires a running c m server
 */
 func (a *Client) CollectSdxCmBasedDiagnostics(params *CollectSdxCmBasedDiagnosticsParams) (*CollectSdxCmBasedDiagnosticsOK, error) {
