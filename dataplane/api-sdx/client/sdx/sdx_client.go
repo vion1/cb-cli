@@ -501,6 +501,62 @@ func (a *Client) ListSdx(params *ListSdxParams) (*ListSdxOK, error) {
 }
 
 /*
+RecoverDatalakeCluster recovers the failed datalake upgrade
+*/
+func (a *Client) RecoverDatalakeCluster(params *RecoverDatalakeClusterParams) (*RecoverDatalakeClusterOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewRecoverDatalakeClusterParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "recoverDatalakeCluster",
+		Method:             "POST",
+		PathPattern:        "/sdx/{name}/recover_failed_upgrade",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &RecoverDatalakeClusterReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*RecoverDatalakeClusterOK), nil
+
+}
+
+/*
+RecoverDatalakeClusterByCrn recovers the failed datalake upgrade
+*/
+func (a *Client) RecoverDatalakeClusterByCrn(params *RecoverDatalakeClusterByCrnParams) (*RecoverDatalakeClusterByCrnOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewRecoverDatalakeClusterByCrnParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "recoverDatalakeClusterByCrn",
+		Method:             "POST",
+		PathPattern:        "/sdx/crn/{crn}/recover_failed_upgrade",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &RecoverDatalakeClusterByCrnReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return result.(*RecoverDatalakeClusterByCrnOK), nil
+
+}
+
+/*
 RenewCertificateOnSdxByCrn renews certificate on s d x cluster by crn
 */
 func (a *Client) RenewCertificateOnSdxByCrn(params *RenewCertificateOnSdxByCrnParams) error {
